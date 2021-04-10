@@ -5,18 +5,13 @@ import org.sql2o.Connection;
 import org.sql2o.Query;
 import org.sql2o.Sql2o;
 
-//todo : add quota
-
-//todo : maximum 21 cred
-
 public class SqlModel {
     private Sql2o sqlObj = null;
 
-    //    initialize connection
+    // initialize connection
     SqlModel() {
         init();
     }
-    //    connection to be re-used
 
     SqlModel(File db) {
         init(db);
@@ -48,7 +43,8 @@ public class SqlModel {
     }
 
     public static boolean containsCourse(final List<? extends RecordEntry> list, final String name) {
-        //?ref: https://stackoverflow.com/questions/18852059/java-list-containsobject-with-field-value-equal-to-x
+        // ?ref:
+        // https://stackoverflow.com/questions/18852059/java-list-containsobject-with-field-value-equal-to-x
         return list.stream().anyMatch(o -> o.getCourseId().equals(name));
     }
 
@@ -59,8 +55,8 @@ public class SqlModel {
     public List<Courses> listCourses() {
         // list all available courses
         try (Connection c = sqlObj.open()) {
-            String sql_cmd = "select * from Courses";
-            Query q = c.createQuery(sql_cmd);
+            String cmd = "select * from Courses";
+            Query q = c.createQuery(cmd);
             return q.executeAndFetch(Courses.class);
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,8 +67,8 @@ public class SqlModel {
     public Courses listCourses(String cid) {
         // list all available courses
         try (Connection c = sqlObj.open()) {
-            String sql_cmd = "select * from Courses where courseid == :cid";
-            Query q = c.createQuery(sql_cmd);
+            String cmd = "select * from Courses where courseid == :cid";
+            Query q = c.createQuery(cmd);
             q.addParameter("cid", cid);
 
             return q.executeAndFetchFirst(Courses.class);
@@ -85,8 +81,8 @@ public class SqlModel {
     public List<Txn> listMyCourses(String netID) {
         // list selected courses in txn
         try (Connection c = sqlObj.open()) {
-            String sql_cmd = "select * from Txn t where t.NETID == :netID";
-            Query q = c.createQuery(sql_cmd);
+            String cmd = "select * from Txn t where t.NETID == :netID";
+            Query q = c.createQuery(cmd);
             q.addParameter("netID", netID);
             q.throwOnMappingFailure(false);
             List<Txn> t = q.executeAndFetch(Txn.class);
@@ -100,8 +96,8 @@ public class SqlModel {
     public List<Courses> listMyCoursesDetails(String netID) {
         // list selected courses in txn and return course details
         try (Connection c = sqlObj.open()) {
-            String sql_cmd = "select c.* from Courses c, txn t where t.courseid == c.courseid and t.netid==:netID";
-            Query q = c.createQuery(sql_cmd);
+            String cmd = "select c.* from Courses c, txn t where t.courseid == c.courseid and t.netid==:netID";
+            Query q = c.createQuery(cmd);
             q.addParameter("netID", netID);
             q.throwOnMappingFailure(false);
             List<Courses> t = q.executeAndFetch(Courses.class);
@@ -116,8 +112,8 @@ public class SqlModel {
         // list previously taken courses
 
         try (Connection c = sqlObj.open()) {
-            String sql_cmd = "select * from History h where h.NETID == :netID";
-            Query q = c.createQuery(sql_cmd);
+            String cmd = "select * from History h where h.NETID == :netID";
+            Query q = c.createQuery(cmd);
             q.addParameter("netID", netID);
             q.throwOnMappingFailure(false);
             List<History> t = q.executeAndFetch(History.class);
@@ -128,14 +124,14 @@ public class SqlModel {
         }
     }
 
-    public boolean LoginAs(String netID) {
+    public boolean loginAs(String netID) {
         boolean result = false;
         List<Users> l = null;
         netID = netID.trim();
 
         try (Connection c = sqlObj.open()) {
-            String sql_cmd = "select * from Users where Users.netid == :ID";
-            Query q = c.createQuery(sql_cmd);
+            String cmd = "select * from Users where Users.netid == :ID";
+            Query q = c.createQuery(cmd);
 
             q.addParameter("ID", netID);
             l = q.executeAndFetch(Users.class);
@@ -150,15 +146,13 @@ public class SqlModel {
         int statusCode = -1;
         StringBuilder message = new StringBuilder();
 
-        Courses target = listCourses(courseId); //supposedly only 1 result
+        Courses target = listCourses(courseId); // supposedly only 1 result
 
-        do {
-
+        do { /* Do-While false loop */
             // A. search if have already taken in history or txn
             boolean taken = false;
             List<Txn> tlist = listMyCourses(netId);
             taken = containsCourse(tlist, courseId);
-
             List<History> hlist = listMyHistory(netId);
 
             taken |= containsCourse(hlist, courseId);
@@ -187,7 +181,7 @@ public class SqlModel {
             }
 
             // C. try to add the course, checkings
-            // over credit limit?
+            // ? over credit limit?
             boolean overlimit = checkIfCreditExceed(netId, target.getCred());
 
             if (overlimit) {
@@ -199,7 +193,7 @@ public class SqlModel {
                 message.append(netId + " pass credit limit check " + "\n");
             }
 
-            // is collide?
+            // ? is collide?
             boolean collide = checkCollision(target, netId);
 
             if (collide) {
@@ -211,7 +205,7 @@ public class SqlModel {
                 message.append(courseId + " fits with other courses selected by " + netId + "\n");
             }
 
-            // is quota full? (still allow register, but inform user)
+            // ? is quota full? (still allow register, but inform user)
             boolean quotaFull = checkIfQuotaExceed(target);
             if (quotaFull) {
                 statusCode = 2;
@@ -222,11 +216,9 @@ public class SqlModel {
                 message.append(courseId + " courses still have quota " + netId + "\n");
             }
 
-            // real add
-            //  insert into txn (courseid, netid) values ('cs101', '3001');
-
+            // ! real add
             try (Connection c = sqlObj.beginTransaction(1)) {
-                //delete
+                // delete
                 String cmd2 = "insert into txn (courseid, netid) values (:CID , :NETID)";
                 Query q2 = c.createQuery(cmd2);
                 q2.addParameter("NETID", netId);
@@ -241,7 +233,7 @@ public class SqlModel {
                     for (Txn txn : newTxns) {
                         System.out.println(txn.toString());
                     }
-                    c.rollback(); //todo : debug only
+                    c.rollback(); // todo : debug only
                 } else {
                     c.commit();
                 }
@@ -270,13 +262,13 @@ public class SqlModel {
     }
 
     public boolean checkIfQuotaExceed(Courses target) {
-        int maxQuota = Integer.valueOf(target.getQta());
+        int maxQuota = Integer.parseInt(target.getQta());
         int count = 0;
         // if count +1 < maxQuota, true
 
         try (Connection c = sqlObj.open()) {
-            String sql_cmd = " select count(txnno) as code from txn where courseID ==:cid ";
-            Query q = c.createQuery(sql_cmd);
+            String cmd = " select count(txnno) as code from txn where courseID ==:cid ";
+            Query q = c.createQuery(cmd);
             q.addParameter("cid", target.getCourseId());
 
             // get list of selected course (credit)
@@ -317,8 +309,7 @@ public class SqlModel {
                 System.out.println(cStart + " " + cEnd);
             }
 
-            // if start - end overlap, return true;
-            // using 2 binary decision tree
+            /* if start to end overlap, it is true */
 
             if (cStart >= tStart) {
                 // case 1: t start first
@@ -346,15 +337,6 @@ public class SqlModel {
                     collide = true;
                     break;
                 }
-
-                // if (cEnd <= tEnd) {
-                //     // c end before t end
-                //     // c 'touch' t
-                //     collide = true;
-                //     break;
-                // }
-
-                //else tstart after cend, no collision
             }
         }
 
@@ -366,8 +348,8 @@ public class SqlModel {
         int sum = 0;
 
         try (Connection c = sqlObj.open()) {
-            String sql_cmd = "select cred from courses c inner join txn on c.courseid = txn.courseid where txn.netid== :netID";
-            Query q = c.createQuery(sql_cmd);
+            String cmd = "select cred from courses c inner join txn on c.courseid = txn.courseid where txn.netid== :netID";
+            Query q = c.createQuery(cmd);
             q.addParameter("netID", netid);
 
             // get list of selected course (credit)
@@ -376,7 +358,7 @@ public class SqlModel {
             for (sqlFeedback sqlFeedback : t) {
                 sum += sqlFeedback.getCred();
             }
-            sum += Integer.valueOf(targetCred);
+            sum += Integer.parseInt(targetCred);
 
             System.out.println("cred sum=" + sum);
 
@@ -385,13 +367,13 @@ public class SqlModel {
         } catch (Exception e) {
             e.printStackTrace();
             return true;
-            // just prevent add
+            // just prevent add, return "exceed"
         }
 
     }
 
     public boolean checkDependency(String courseId, String netId) {
-        //find preq
+        // find preq
         try (Connection c = sqlObj.open()) {
             String cmd = "select preq from courses where courseid == :cid  and preq != ''";
             Query q1 = c.createQuery(cmd);
@@ -402,7 +384,7 @@ public class SqlModel {
                 return true;
             }
 
-            //check if satisfied
+            // ? check if satisfied, in either past or current records
 
             String cmd2 = "select * from txn where courseid==(select preq from courses where courseid == :cid) and netid == :netid";
 
@@ -412,6 +394,7 @@ public class SqlModel {
 
             List<Txn> result = q2.executeAndFetch(Txn.class);
             boolean depTxn = !result.isEmpty();
+
             // ----------------------------------------------
             String cmd3 = "select * from history where courseid==(select preq from courses where courseid == :cid) and netid == :netid";
 
@@ -424,7 +407,7 @@ public class SqlModel {
 
             // ----------------------------------------------
 
-            return depTxn | depHist;
+            return depTxn || depHist;
         }
 
     }
@@ -434,7 +417,8 @@ public class SqlModel {
 
         StringBuilder message = new StringBuilder();
 
-        // In order to open a transaction, we use the beginTransaction method instead of the open method 
+        // In order to open a transaction, we use the beginTransaction method instead of
+        // the open method
 
         // this ensures atomicity in ACID
         try (Connection c = sqlObj.beginTransaction(1)) {
@@ -450,11 +434,11 @@ public class SqlModel {
 
             // B. remove
             if (statusCode == 1) {
-                //exist
+                // exist
                 String msg = courseId + " chosen by " + netId + "\n";
                 System.out.println(msg);
 
-                //delete
+                // delete
                 String cmd2 = "delete from txn where (TXN.NETID == :NETID AND TXN.COURSEID == :CID)";
                 Query q2 = c.createQuery(cmd2);
                 q2.addParameter("NETID", netId).addParameter("CID", courseId);
@@ -462,7 +446,7 @@ public class SqlModel {
 
                 message.append("Dropped " + msg);
             } else {
-                //not exist
+                // not exist
                 statusCode = 0;
                 String msg = courseId + " not chosen by " + netId + "\n";
                 System.out.println(msg);
@@ -475,7 +459,7 @@ public class SqlModel {
                 for (Txn txn : newTxns) {
                     System.out.println(txn.toString());
                 }
-                c.rollback(); //todo : debug only
+                c.rollback(); // todo : debug only
             } else {
                 c.commit();
             }

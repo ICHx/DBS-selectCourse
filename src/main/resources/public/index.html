@@ -33,7 +33,7 @@
         <button class="btn btn-secondary" v-on:click="getHistoryCourses()">Studied Course History (view)</button>
 
         <hr>
-        <table id="showcase" class="table table-hover">
+        <table id="showcase" class="table table-hover" aria-label="item list table">
             <!-- head -->
             <th></th>
             <th v-for="col in cols">{{col}}</th>
@@ -52,17 +52,7 @@
             </tbody>
 
         </table>
-        <!-- <ul class="list-group no-bullets"  >
-            <li v-for="course in courseList">
-                <label>
-                    <input type="radio" :value="course.courseId"
-                    v-model="selected" />
-                    {{course}}
-                </label>
-            </li>
-        </ul> -->
         <br>
-
         <div id="debug">
             <p>
                 <strong>

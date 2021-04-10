@@ -10,10 +10,10 @@ public class SqlModelTest {
     public void loginAs() {
         SqlModel n = new SqlModel();
 
-        boolean result1 = n.LoginAs("1001");
+        boolean result1 = n.loginAs("1001");
         assertEquals(result1, true);
 
-        boolean result2 = n.LoginAs("9001");
+        boolean result2 = n.loginAs("9001");
         assertEquals(result2, false);
     }
 
@@ -52,19 +52,19 @@ public class SqlModelTest {
 
         // te919 requires te910, fufilled in txn
         boolean result3a = n.checkDependency("te919", "3001");
-        assertEquals(result3a, true);
+        assertEquals(true, result3a);
 
         // cs102 requires cs101, fufilled in history
         boolean result3a2 = n.checkDependency("te919", "3001");
-        assertEquals(result3a2, true);
+        assertEquals(true, result3a2);
 
         // te919 requires te910, not fufilled
         boolean result3b = n.checkDependency("te919", "3009");
-        assertEquals(result3b, false);
+        assertEquals(false, result3b);
 
         // te910 requires nothing
         boolean result4 = n.checkDependency("te910", "3001");
-        assertEquals(result4, true);
+        assertEquals(true, result4);
     }
 
     @Test
@@ -73,13 +73,14 @@ public class SqlModelTest {
         SqlModel n = new SqlModel();
 
         boolean result1 = n.checkIfCreditExceed("3001", "20");
-        assertEquals(result1, true);
+        assertEquals(true, result1);
 
         boolean result2 = n.checkIfCreditExceed("3001", "3");
-        assertEquals(result2, false);
+        assertEquals(false, result2);
 
+        // 15+6 not bigger than 21
         boolean result3 = n.checkIfCreditExceed("3001", "15");
-        assertEquals(result3, false);
+        assertEquals(false, result3);
     }
 
     @Test
@@ -168,7 +169,7 @@ public class SqlModelTest {
     public void checkIfQuotaExceed() {
         SqlModel n = new SqlModel();
 
-        //te901 is already selected by 1 person
+        // te901 is already selected by 1 person
         // te901 has 1 quota
         Courses test1 = new Courses();
         test1.setQta("1");

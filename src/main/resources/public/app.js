@@ -1,5 +1,3 @@
-var User = null;
-
 var app = new Vue({
   el: "#app",
   data: {
@@ -152,46 +150,49 @@ var app = new Vue({
   }, //end of methods
 });
 
-function login() {
-  //            to login as some user, password mechanisms are not implemented
-  //            if required to, they are hashed as a combination of user and password
+let User = null; //uses as Json parameters, global
+{
+  let extractId = null; //uses as login, extracted from localStore
 
-  var ID;
-  var result = 0;
+  function login() {
+    //to login as some user, password mechanisms are not implemented
+    //if required to, they are hashed as a combination of user and password
+    //If you assign a value to a variable that has not been declared, it will automatically become a GLOBAL variable.
 
-  if (localStorage.User) {
-    User = localStorage.User;
-    ID = localStorage.User;
+    var result = 0;
 
-    validate("true");
-    return;
-  } else {
-    ID = prompt("Please enter NETID (eg: 3001)");
-    fetch("/login/" + ID)
-      .then((response) => response.text())
-      .then((text) => {
-        result = text;
+    if (localStorage.User) {
+      extractId = localStorage.User;
+      validate("true");
+      return;
+    } else {
+      extractId = prompt("Please enter NETID (eg: 3001)");
+      fetch("/login/" + extractId)
+        .then((response) => response.text())
+        .then((text) => {
+          result = text;
 
-        validate(result);
-      });
+          validate(result);
+        });
+    }
   }
+
+  function validate(result) {
+    console.log("result is " + result);
+    if (result == "true") {
+      User = extractId; //important
+      app.message = "Welcome " + extractId;
+      localStorage.User = extractId;
+      //    client-side cookie like stuff.
+      //    In real world would be storing hashed token instead
+      document.getElementById("logout-btn").style.visibility = "visible";
+    } else {
+      alert("Invalid NetID");
+      User = null;
+      app.message = "Not logged in";
+    }
+    console.log("User is " + User);
+  }
+  login();
 }
 
-function validate(result) {
-  console.log("result is " + result);
-  if (result == "true") {
-    User = ID; //important
-    app.message = "Welcome " + User;
-    localStorage.User = ID;
-    //    client-side cookie like stuff.
-    //    In real world would be storing hashed token instead
-    document.getElementById("logout-btn").style.visibility = "visible";
-  } else {
-    alert("Invalid NetID");
-    User = null;
-    app.message = "Not logged in";
-  }
-  console.log("User is " + User);
-}
-
-login();

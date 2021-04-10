@@ -1,0 +1,39 @@
+body{
+    padding: 5%;
+    padding-top: 1%;
+    background-color: grey;
+}
+
+nav{
+    background-color: aliceblue;
+    padding: 2%;
+    color: darkblue;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+button{
+    margin-right: 0.1rem;
+    margin-left: 0.1rem;
+    
+}
+
+.no-bullets{
+  list-style-type: none;
+}
+
+#debug{
+    font-size: x-small;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: antiquewhite;
+}
+
+td{
+    text-align: left;
+
+}
+
+#app{
+    background-color: whitesmoke;
+    padding: 1rem;
+}

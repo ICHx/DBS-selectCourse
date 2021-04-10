@@ -46,9 +46,7 @@ var app = new Vue({
   },
   methods: {
     clearList: function () {
-      console.log(this.courseList);
       this.courseList = [];
-      console.log(this.courseList);
     },
 
     //! query functions
@@ -178,7 +176,7 @@ let User = null; //uses as Json parameters, global
   }
 
   function validate(result) {
-    console.log("result is " + result);
+    console.log("validate result is " + result);
     if (result == "true") {
       User = extractId; //important
       app.message = "Welcome " + extractId;

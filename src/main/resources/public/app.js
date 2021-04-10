@@ -9,6 +9,7 @@ var app = new Vue({
     message: "Hello",
     selected: "",
     courseList: [],
+    activeBtn: 'btn-get',
     serverResponse: {
       success: 0,
       details: "",
@@ -17,7 +18,7 @@ var app = new Vue({
   mounted() {
     fetch("/isdebug").then(
       (r) => r.text().then(
-        (t)=>{
+        (t) => {
           if (t == 1) {
             this.rollbackMode = "rollbackMode: ON";
           }
@@ -62,6 +63,7 @@ var app = new Vue({
 
       this.resetBtn();
       document.getElementById("btn-add").style.visibility = "visible";
+      this.activeBtn = 'btn-get';
     },
     getHistoryCourses: function () {
       if (!localStorage.User) {
@@ -75,6 +77,7 @@ var app = new Vue({
         .then((courseList) => (this.courseList = courseList));
 
       this.resetBtn();
+      this.activeBtn = 'btn-hist';
     },
     getMyCourses: function () {
       if (!localStorage.User) {
@@ -89,6 +92,7 @@ var app = new Vue({
 
       this.resetBtn();
       document.getElementById("btn-drop").style.visibility = "visible";
+      this.activeBtn = 'btn-txn';
     },
 
     //! add/drop submission
@@ -142,14 +146,17 @@ var app = new Vue({
       localStorage.removeItem("User");
       location.reload();
     },
-  },
+
+
+
+  }, //end of methods
 });
 
 function login() {
   //            to login as some user, password mechanisms are not implemented
   //            if required to, they are hashed as a combination of user and password
 
-
+  var ID;
   var result = 0;
 
   if (localStorage.User) {

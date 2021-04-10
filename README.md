@@ -1,18 +1,23 @@
-DBS-selectCourse
+Project DBS-selectCourse
 --
 ### Introduction
-This is my implementation of a course selection system.  Backed by a relational database, hosted by SparkJava web framework and interfaced with Vue.js client.
-
+This is my implementation of an imaginary course selection system.  Backed by a relational database, hosted by SparkJava web framework and interfaced with Vue.js client.
 ### Hosted Instance
-https://second-pursuit-310310.df.r.appspot.com/
+[Hosted site](https://second-pursuit-310310.df.r.appspot.com/)<br>
 The SparkJava application is hosted on Google App Engine Standard Environment with Java11.
 Since GAE only allows read-only access to SQLite datafile, exceptions are caught.  But can be ignored, data query and operations are still simulated.
 
+![preview](docs/preview.png)
 
+### Todo
+[Todo list](TODO.md)
+
+
+<hr>
 ### Project Requirements
 
-DB Select course System\
--	Vaadin/SparkJava\
+DB Select course System
+-	Vaadin/SparkJava
 -	sql2o or Mybatis
 
 
@@ -47,7 +52,7 @@ DB Select course System\
 > 
 
 
-## Screenshot
+## Progress Screenshots
 ![image](https://user-images.githubusercontent.com/11556527/111413472-4b2b6780-8719-11eb-9b53-fddde8011da6.png)
 \
 Before Bootstrap

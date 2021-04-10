@@ -11,7 +11,7 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title id="title">eStudent - THU</title>
-
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
@@ -22,36 +22,42 @@
     <div id="app">
         <nav class="navbar">
             {{message}}
-            <button class="btn btn-outline-info" id="logout-btn" style="visibility: hidden"
+            <button class="btn btn-outline-warning" id="logout-btn" style="visibility: hidden"
                 v-on:click="logout()">Logout</button>
         </nav>
+        <div id="controlbar" class="btn-group flex-wrap">
+            <button id="btn-get" class="btn btn-secondary" v-on:click="getAllCourses()" v-bind:class="{'active': this.activeBtn == 'btn-get'}">Get courses</button>
 
-        <button class="btn btn-primary" v-on:click="getAllCourses()">Get courses</button>
+            <button id="btn-txn" class="btn btn-secondary" v-on:click="getMyCourses()" v-bind:class="{'active': this.activeBtn == 'btn-txn'}">My courses (view/remove)</button>
 
-        <button class="btn btn-secondary" v-on:click="getMyCourses()">My courses (view/remove)</button>
-
-        <button class="btn btn-secondary" v-on:click="getHistoryCourses()">Studied Course History (view)</button>
+            <button id="btn-hist" class="btn btn-secondary" v-on:click="getHistoryCourses()" v-bind:class="{'active': this.activeBtn == 'btn-hist'}">Studied Course History (view)</button>
+        </div>
 
         <hr>
-        <table id="showcase" class="table table-hover" aria-label="item list table">
-            <!-- head -->
-            <th></th>
-            <th v-for="col in cols">{{col}}</th>
-
-            <!-- content -->
-
-            <tbody>
-                <tr v-for="course in this.courseList">
-                    <td>
-                        <input type="radio" :value="course.courseId" v-model="selected" />
-                    </td>
-                    <td v-for="courseFields in course">
-                        {{courseFields}}
-                    </td>
-                </tr>
-            </tbody>
-
-        </table>
+        <div class="table-responsive">
+            <table id="showcase" class="table table-hover " aria-label="item-table">
+                <!-- head -->
+                <thead >
+                    <th></th>
+                    <th v-for="col in cols">{{col}}</th>
+                </thead>
+    
+                <!-- content -->
+    
+                <tbody>
+                    <tr v-for="course in this.courseList">
+                        <td>
+                            <input type="radio" :value="course.courseId" v-model="selected" />
+                        </td>
+                        <td v-for="courseFields in course">
+                            {{courseFields}}
+                        </td>
+                    </tr>
+                </tbody>
+    
+            </table>
+                
+        </div>
         <br>
         <div id="debug">
             <p>

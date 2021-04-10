@@ -1,21 +1,28 @@
 body{
-    padding: 5%;
-    padding-top: 1%;
+    margin: 0 auto;
+    /* padding: 5%; */
+    padding-top: 2%;
+    max-height: min-content;
+    max-width: 50rem;
+
     background-color: grey;
+
 }
 
 nav{
-    background-color: aliceblue;
-    padding: 2%;
-    color: darkblue;
-    font-weight: bold;
+    background-color: maroon;
+    color: wheat;
+    padding: 5%;
+    padding-right: 2%;
+    font-weight: 900;
+    font-size: large;
     margin-bottom: 1rem;
 }
 
-button{
-    margin-right: 0.1rem;
-    margin-left: 0.1rem;
-    
+#controlbar>button{
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+         border-radius: 0 !important;
 }
 
 .no-bullets{
@@ -23,17 +30,25 @@ button{
 }
 
 #debug{
-    font-size: x-small;
+    font-size: 0.7rem;
+    
     font-family: 'Courier New', Courier, monospace;
     background-color: antiquewhite;
 }
 
 td{
     text-align: left;
-
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
 #app{
     background-color: whitesmoke;
     padding: 1rem;
+    
+    box-shadow: 12px 12px black;
+}
+
+#showcase{
+    overflow-x: auto;
 }

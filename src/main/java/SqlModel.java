@@ -32,20 +32,23 @@ public class SqlModel {
             System.exit(1);
         }
 
-        boolean isAppEngine = System.getProperty("com.google.appengine.runtime.version") != null;
+        String isAppEngine = System.getenv().get("GAE_ENV");
+        try {
+            System.err.println(isAppEngine);
+            //  ! copy db to /tmp, ammend f.
+            System.err.println("I: Running on Google App Engine.");
+            var dest = Paths.get("/tmp/target.db");
+            Files.copy(f.toPath(), dest);
+            f = dest.toFile();
+            System.err.println("I: Copied File to /tmpfs");
+
+            // ! debug off
+            Main.DEBUG = 0;
+        } catch (Exception nu) {
+            System.err.println("I: Not on GAE");
+        }
 
         try {
-            if (isAppEngine) {
-                //  ! copy db to /tmp, ammend f.
-                System.err.println("I: Running on Google App Engine.");
-                var dest = Paths.get("/tmp/target.db");
-                Files.copy(f.toPath(), dest);
-                f = dest.toFile();
-                System.err.println("I: Copied File to /tmpfs");
-                
-                // ! debug off
-                Main.DEBUG=0;
-            }
 
             Class.forName("org.sqlite.JDBC");
             String url = "jdbc:sqlite:" + f.getAbsolutePath();

@@ -27,6 +27,5 @@ hs_err_pid*
 *.lnk
 *.docx
 *.odt
-*.db
 
 target/

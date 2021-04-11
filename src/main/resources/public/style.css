@@ -51,4 +51,6 @@ td{
 
 #showcase{
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 45vh;
 }

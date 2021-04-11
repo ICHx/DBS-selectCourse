@@ -1,28 +1,34 @@
-var app = new Vue({
+const app = new Vue({
   el: "#app",
   data: {
-    rollbackMode: "",
+    isDebug: false,
     alertVisible: false,
+    alertLock: 0,
     alertType: 0,
     message: "Hello",
     selected: "",
     courseList: [],
-    activeBtn: 'btn-get',
+    activeBtn: "btn-get",
     serverResponse: {
       success: 0,
       details: "",
     },
   },
-  mounted() {
-    fetch("/isdebug").then(
-      (r) => r.text().then(
-        (t) => {
-          if (t == 1) {
-            this.rollbackMode = "rollbackMode: ON";
-          }
-        }
-      )
+  created: function () {
+    console.log("Vue app created.");
+    fetch("/isdebug").then((r) =>
+      r.text().then((t) => {
+        // if (t == 1) {
+        //   this.isDebug = "rollbackMode: ON";
+        // }
+        console.log("is Debug=" + t);
+        this.isDebug = t == 1;
+      })
     );
+  },
+  mounted: function () {
+    console.log("Vue app mounted.");
+
     this.resetBtn();
   },
   computed: {
@@ -31,16 +37,15 @@ var app = new Vue({
       return Object.keys(this.courseList[0]);
     },
     alertObject: function () {
-      // todo : wip
       return {
-        invisible: this.alertVisible == false,
+        "d-none": this.alertVisible == false,
         "alert alert-secondary": this.alertVisible == true,
         //fail
         "alert alert-success": this.serverResponse.success == 1,
+        "alert alert-warning": this.serverResponse.success == 0,
         "alert alert-warning": this.serverResponse.success == 2,
         "alert alert-danger": this.serverResponse.success == -2,
         // -2: unhandled error
-
       };
     },
   },
@@ -58,8 +63,8 @@ var app = new Vue({
         .then((courseList) => (this.courseList = courseList));
 
       this.resetBtn();
-      document.getElementById("btn-add").style.visibility = "visible";
-      this.activeBtn = 'btn-get';
+      document.getElementById("btn-add").style.display = "block";
+      this.activeBtn = "btn-get";
     },
     getHistoryCourses: function () {
       if (!localStorage.User) {
@@ -73,7 +78,7 @@ var app = new Vue({
         .then((courseList) => (this.courseList = courseList));
 
       this.resetBtn();
-      this.activeBtn = 'btn-hist';
+      this.activeBtn = "btn-hist";
     },
     getMyCourses: function () {
       if (!localStorage.User) {
@@ -87,8 +92,8 @@ var app = new Vue({
         .then((courseList) => (this.courseList = courseList));
 
       this.resetBtn();
-      document.getElementById("btn-drop").style.visibility = "visible";
-      this.activeBtn = 'btn-txn';
+      document.getElementById("btn-drop").style.display = "block";
+      this.activeBtn = "btn-txn";
     },
 
     //! add/drop submission
@@ -104,9 +109,8 @@ var app = new Vue({
         .then((response) => response.json())
         .then((jsonreply) => {
           this.serverResponse = jsonreply;
-        });
-
-      this.alertVisible = true;
+        })
+        .then(this.showAlert());
     },
     addCourse: function () {
       if (!localStorage.User) {
@@ -119,17 +123,16 @@ var app = new Vue({
         .then((response) => response.json())
         .then((jsonreply) => {
           this.serverResponse = jsonreply;
-        });
-
-      this.alertVisible = true;
+        })
+        .then(this.showAlert());
     },
 
     // auxilary functions
 
     resetBtn: function () {
       this.selected = "";
-      document.getElementById("btn-add").style.visibility = "hidden";
-      document.getElementById("btn-drop").style.visibility = "hidden";
+      document.getElementById("btn-add").style.display = "none";
+      document.getElementById("btn-drop").style.display = "none";
 
       this.alertVisible = false;
       this.serverResponse = {
@@ -143,8 +146,23 @@ var app = new Vue({
       location.reload();
     },
 
+    showAlert: function () {
+      this.alertVisible = true;
+      console.log("sleep 5000ms");
 
+      var lock = Math.random();
+      this.alertLock = lock;
 
+      setTimeout(() => {
+        if (lock == this.alertLock) {
+          console.log("I: lock match");
+          this.alertVisible = false;
+        } else {
+          console.log("I: lock don't match");
+        }
+        console.log("slept 5000ms");
+      }, 5000);
+    },
   }, //end of methods
 });
 
@@ -193,4 +211,3 @@ let User = null; //uses as Json parameters, global
   }
   login();
 }
-

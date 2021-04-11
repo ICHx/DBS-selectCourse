@@ -1,101 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title id="title">eStudent - THU</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-</head>
 
-<body>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
     <!-- login routine -->
     <div id="app">
-        <nav class="navbar">
-            {{message}}
-            <button class="btn btn-outline-warning" id="logout-btn" style="visibility: hidden"
-                v-on:click="logout()">Logout</button>
-        </nav>
-        <div id="controlbar" class="btn-group flex-wrap">
-            <button id="btn-get" class="btn btn-secondary" v-on:click="getAllCourses()" v-bind:class="{'active': this.activeBtn == 'btn-get'}">Get courses</button>
+      <nav class="navbar">
+        {{message}}
+        <button
+          class="btn btn-outline-warning btn-sm"
+          id="logout-btn"
+          style="visibility: hidden"
+          v-on:click="logout()"
+        >
+          Logout
+        </button>
+      </nav>
+      <div class="btn-group flex-fill d-flex controlbar">
+        <button
+          id="btn-get"
+          class="btn btn-secondary"
+          v-on:click="getAllCourses()"
+          v-bind:class="{'active': this.activeBtn == 'btn-get'}"
+        >
+          Get courses
+        </button>
 
-            <button id="btn-txn" class="btn btn-secondary" v-on:click="getMyCourses()" v-bind:class="{'active': this.activeBtn == 'btn-txn'}">My courses (view/remove)</button>
+        <button
+          id="btn-txn"
+          class="btn btn-secondary"
+          v-on:click="getMyCourses()"
+          v-bind:class="{'active': this.activeBtn == 'btn-txn'}"
+        >
+          My courses (view/remove)
+        </button>
 
-            <button id="btn-hist" class="btn btn-secondary" v-on:click="getHistoryCourses()" v-bind:class="{'active': this.activeBtn == 'btn-hist'}">Studied Course History (view)</button>
+        <button
+          id="btn-hist"
+          class="btn btn-secondary"
+          v-on:click="getHistoryCourses()"
+          v-bind:class="{'active': this.activeBtn == 'btn-hist'}"
+        >
+          Studied Course History (view)
+        </button>
+      </div>
+
+      <div id="showcaseframe" class="table-responsive">
+        <table id="showcase" class="table table-hover" aria-label="item-table">
+          <!-- head -->
+          <thead>
+            <th></th>
+            <th v-for="col in cols">{{col}}</th>
+          </thead>
+
+          <!-- content -->
+
+          <tbody>
+            <tr v-for="course in this.courseList">
+              <td>
+                <input
+                  type="radio"
+                  :value="course.courseId"
+                  v-model="selected"
+                />
+              </td>
+              <td v-for="courseFields in course">{{courseFields}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="controlbar">
+        <button
+          id="btn-add"
+          class="btn btn-success"
+          v-on:click="addCourse()"
+          href="#top"
+        >
+          Add Course
+        </button>
+        <button
+          id="btn-drop"
+          class="btn btn-warning"
+          v-on:click="dropCourse()"
+          href="#top"
+        >
+          Drop Course
+        </button>
+        <hr />
+        <div id="serveMsg" v-bind:class="alertObject" role="alert">
+          <b>Status:</b>
+          <pre>{{this.serverResponse.details}}</pre>
         </div>
+      </div>
 
-        <hr>
-        <div id="showcaseframe" class="table-responsive">
-            <table id="showcase" class="table table-hover " aria-label="item-table">
-                <!-- head -->
-                <thead >
-                    <th></th>
-                    <th v-for="col in cols">{{col}}</th>
-                </thead>
-    
-                <!-- content -->
-    
-                <tbody>
-                    <tr v-for="course in this.courseList">
-                        <td>
-                            <input type="radio" :value="course.courseId" v-model="selected" />
-                        </td>
-                        <td v-for="courseFields in course">
-                            {{courseFields}}
-                        </td>
-                    </tr>
-                </tbody>
-    
-            </table>
-                
-        </div>
-        <br>
-        <div id="debug">
-            <p>
-                <strong>
-                    Debug section
-                </strong>
-                {{rollbackMode}}
-                <br>
-                <span>Checked names: {{ selected }}</span>
-                <br>
-                <span>course[0] values: {{ courseList[0] }}</span>
-                <br>
-                <span>cols: {{ this.cols }}</span><br>
-                <span>server: {{ this.serverResponse }}</span>
-            </p>
-        </div>
-
-        <hr>
-        <footer>
-            <div v-bind:class="alertObject" role="alert">
-                <pre>{{this.serverResponse.details}}</pre>
-            </div>
-            <br>
-            <button id="btn-add" class="btn btn-success" v-on:click="addCourse()" href="#top">Add Checked
-                Courses</button>
-            <button id="btn-drop" class="btn btn-warning" v-on:click="dropCourse()" href="#top">Remove Checked
-                Courses</button>
-        </footer>
+      <div
+        class="debug alert alert-warning"
+        role="alert"
+        v-if="this.isDebug==true"
+      >
+        <strong> Debug section </strong>
+        rollbackMode: {{isDebug}}
+        <div></div>
+        <br />
+        <span>Checked names: {{ selected }}</span>
+        <br />
+        <span>course[0] values: {{ courseList[0] }}</span>
+        <br />
+        <span>cols: {{ this.cols }}</span><br />
+        <span>server: {{ this.serverResponse }}</span>
+      </div>
     </div>
-
-
-
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    
-    <!-- unused -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
-
     <script src="/app.js"></script>
-</body>
-
+  </body>
 </html>

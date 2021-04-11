@@ -1,4 +1,5 @@
 import java.io.File;
+import java.nio.file.*;
 import java.util.List;
 
 import org.sql2o.Connection;
@@ -31,11 +32,25 @@ public class SqlModel {
             System.exit(1);
         }
 
+        boolean isAppEngine = System.getProperty("com.google.appengine.runtime.version") != null;
+
         try {
+            if (isAppEngine) {
+                //  ! copy db to /tmp, ammend f.
+                System.err.println("I: Running on Google App Engine.");
+                var dest = Paths.get("/tmp/target.db");
+                Files.copy(f.toPath(), dest);
+                f = dest.toFile();
+                System.err.println("I: Copied File to /tmpfs");
+                
+                // ! debug off
+                Main.DEBUG=0;
+            }
+
             Class.forName("org.sqlite.JDBC");
             String url = "jdbc:sqlite:" + f.getAbsolutePath();
             this.sqlObj = new Sql2o(url, "DataStore", "");
-            System.out.println("Connection to SQLite established.");
+            System.err.println("I: Connection to SQLite established. " + url);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(2);

@@ -12,7 +12,7 @@ public class Main {
      *
      */
     private static final String MIME_JSON = "application/json";
-    public static final int DEBUG = 1; // if set as 0, will not auto-rollback
+    public static int DEBUG = 1; // if set as 0, will not auto-rollback
     public static final int MAXCREDIT = 21; 
 
     public static void main(String[] args) {

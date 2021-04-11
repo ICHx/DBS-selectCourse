@@ -49,7 +49,7 @@ td{
     box-shadow: 12px 12px black;
 }
 
-#showcase{
+#showcaseframe{
     overflow-x: auto;
     overflow-y: auto;
     max-height: 45vh;

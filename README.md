@@ -5,7 +5,7 @@ This is my implementation of an imaginary course selection system.  Backed by a 
 ### Hosted Instance
 [Hosted site](https://second-pursuit-310310.df.r.appspot.com/)<br>
 The SparkJava application is hosted on Google App Engine Standard Environment with Java11.
-Since GAE only allows read-only access to SQLite datafile, ～～exceptions are caught.  But can be ignored, data query and operations are still simulated.～～ db is copied to /tmp, changes persist as long as the app instance is running.
+Since GAE only allows read-only access to SQLite datafile, ~~exceptions are caught.  But can be ignored, data query and operations are still simulated.~~ db is copied to /tmp, changes persist as long as the app instance is running.
 
 ![preview](docs/preview.png)
 

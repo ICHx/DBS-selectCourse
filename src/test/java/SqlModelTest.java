@@ -22,9 +22,9 @@ public class SqlModelTest {
     public void dropCourse() {
         SqlModel n = new SqlModel();
         int result1 = n.dropCourse("3001", "te901").getSuccess();
-        assertEquals(result1, 1);
+        assertEquals(1,result1);
         int result2 = n.dropCourse("3001", "cs901").getSuccess();
-        assertEquals(result2, 0);
+        assertEquals(0,result2);
     }
 
     @Test
@@ -34,16 +34,16 @@ public class SqlModelTest {
         // already exist in txn
         int result1 = n.addCourse("3001", "te901").getSuccess();
 
-        assertEquals(result1, 0);
-
+        assertEquals(0,result1);
+        
         // already taken in hist
         int result1b = n.addCourse("3001", "cs101").getSuccess();
-
-        assertEquals(result1b, 0);
-
+        
+        assertEquals(0,result1b);
+        
         // not already exist
         int result2 = n.addCourse("3009", "cs109").getSuccess();
-        assertEquals(result2, 1);
+        assertEquals(1,result2);
 
     }
 

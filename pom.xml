@@ -5,7 +5,7 @@
 
     <groupId>org.ric.selectcourse</groupId>
     <artifactId>DBS-selectCourse</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.3-SNAPSHOT</version>
 
     <name>selectcourse</name>
     <packaging>jar</packaging>

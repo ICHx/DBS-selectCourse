@@ -7,6 +7,7 @@ import org.sql2o.Query;
 import org.sql2o.Sql2o;
 
 public class SqlModel {
+    
     private Sql2o sqlObj = null;
 
     // initialize connection
@@ -36,7 +37,7 @@ public class SqlModel {
         try {
             System.err.println(isAppEngine);
             //  ! copy db to /tmp, ammend f.
-            System.err.println("I: Running on Google App Engine.");
+            System.err.println("I: Running on Google App Engine?");
             var dest = Paths.get("/tmp/target.db");
             Files.copy(f.toPath(), dest);
             f = dest.toFile();

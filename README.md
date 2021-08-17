@@ -7,7 +7,7 @@ This is my implementation of an imaginary course selection system.  Backed by a 
 The SparkJava application is hosted on Google App Engine Standard Environment with Java11.
 Since GAE only allows read-only access to SQLite datafile, ~~exceptions are caught.  But can be ignored, data query and operations are still simulated.~~ db is copied to /tmp, changes persist as long as the app instance is running.
 
-![image](https://user-images.githubusercontent.com/11556527/129689079-4db7406c-f5d2-4ae5-9812-e99c668b1349.png)
+![image](https://user-images.githubusercontent.com/11556527/129689687-51d5aba5-e55a-4841-97a7-ddca8cf84266.png)
 *Available Course List*
 
 ![preview](docs/preview.png)
